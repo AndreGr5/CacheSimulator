@@ -10,12 +10,12 @@
 #include <windows.h>
 
 #define tamMP 64 ///Tamanho da Memoria Principal; * ( N )
-#define END 6 ///Tamanho do enderaçamento da memória; * ( E )
-#define tamBloco 4 ///Quantidade de blocos na memória cache; * ( X )
+#define END 6 ///Tamanho do enderaÃ§amento da memÃ³ria; * ( E )
+#define tamBloco 4 ///Quantidade de blocos na memÃ³ria cache; * ( X )
 #define MCACHE 4 ///Quantidade de linhas da memoria cache; * ( L )
-#define mbits 4/// tamanho de bits do endereço de bloco da memória; *
+#define mbits 4/// tamanho de bits do endereÃ§o de bloco da memÃ³ria; *
 
-//#define BIT 10 ///Tamanho máximo da instrução;
+//#define BIT 10 ///Tamanho mÃ¡ximo da instruÃ§Ã£o;
 
 #define t 3 /// tamanho da tag; *
 #define ind 1 /// tamanho do indice; *
@@ -32,7 +32,7 @@
 using namespace std;
 
 /*-----------------Cores do DOS-------------------------------------------------
-Descrição: Procedimento para definição de Cores do DOS
+DescriÃ§Ã£o: Procedimento para definiÃ§Ã£o de Cores do DOS
 ------------------------------------------------------------------------------*/
 enum DOS_COLORS {
     BLACK, BLUE, GREEN, CYAN, RED, MAGENTA, BROWN,
@@ -41,7 +41,7 @@ enum DOS_COLORS {
 /*----------------------------------------------------------------------------*/
 
 /*-----------------Cores das letras---------------------------------------------
-Descrição: Procedimento para inserir cores de letras no programa
+DescriÃ§Ã£o: Procedimento para inserir cores de letras no programa
 ------------------------------------------------------------------------------*/
 void textcolor (DOS_COLORS iColor)
 {
@@ -64,7 +64,7 @@ void gotoxy(int x, int y){
 typedef struct Linha{
     //int bitV; //?
     int tag=-1;
-    int lfu=0;  /// para substituição da linha;
+    int lfu=0;  /// para substituiÃ§Ã£o da linha;
     char bloco[tamBloco][15];
     int local=-1;
 
@@ -99,13 +99,13 @@ typedef struct MemoriaPrincipal{
     int bloco;
 }memoriaP;
 
-/// Variáveis Globais/////////////////////////////////////////////////
+/// VariÃ¡veis Globais/////////////////////////////////////////////////
 
 linha cacheMD[MCACHE]; /// Cache MD e Totalmente assossiativa
 conjunto Ccache[qtdConjuntos]; /// Cache Assossiativa por conjunto
 memoriaP mp[tamMP];
 
-FILE *memoria; /// arquivo com as instruções
+FILE *memoria; /// arquivo com as instruÃ§Ãµes
 
 int conjuntoCheio[qtdConjuntos];
 int cacheCheia=0; /// TA
@@ -134,7 +134,7 @@ int GeraArquivo(){
 
     FILE *sobre = fopen("sobre.txt","w");
 
-    fprintf(sobre,"Feito por André Gomes\n\nContato: andregr@id.uff.br\n\nEsse programa faz parte do projeto de monitoria da disciplina Fundamentos de Arquitetura de Computadores da UFF de Rio das Ostras");
+    fprintf(sobre,"Feito por AndrÃ© Gomes\n\nContato: andregr@id.uff.br\n\nEsse programa faz parte do projeto de monitoria da disciplina Fundamentos de Arquitetura de Computadores da UFF de Rio das Ostras");
     fclose(sobre);
 
 }
@@ -164,7 +164,7 @@ void Restore(){
     }
 }
 
-/// Funçoes de Manipulação de números ////////////////////////////////
+/// FunÃ§oes de ManipulaÃ§Ã£o de nÃºmeros ////////////////////////////////
 
 int pot(int a, int b){
     if(b==0) return 1;
@@ -223,7 +223,7 @@ int* dec_to_vet(int dec, int tam){
     return vetor;
 }
 
-/// Funções da Cache//////////////////////////////////////////////////////
+/// FunÃ§Ãµes da Cache//////////////////////////////////////////////////////
 
 void IniciaMemoria(){ /// Pega o arquivo de texto e coloca no vetor memoria;
     char instrucao[11];
@@ -244,7 +244,7 @@ void IniciaMemoria(){ /// Pega o arquivo de texto e coloca no vetor memoria;
 
 }
 
-int procuraCache(adressAC endereco){ /// Procura a instrução na memória cache;
+int procuraCache(adressAC endereco){ /// Procura a instruÃ§Ã£o na memÃ³ria cache;
     for(int i=0;i<qtdLinhas;i++){
         if(Ccache[(endereco.conjunto)].lcache[i].local==-1) Ccache[(endereco.conjunto)].lcache[i].local=i;
         if(Ccache[endereco.conjunto].lcache[i].tag==endereco.tag){
@@ -255,12 +255,12 @@ int procuraCache(adressAC endereco){ /// Procura a instrução na memória cache;
     return 0;
 }
 
-int procuraCache(adressMD endereco){ /// Procura a instrução na memória cache;
+int procuraCache(adressMD endereco){ /// Procura a instruÃ§Ã£o na memÃ³ria cache;
     if(cacheMD[endereco.indice].tag == endereco.tag) return 1; /// Cache hit;
         else return 0;
 }
 
-int procuraCache(adressTA endereco){ /// Procura a instrução na memória cache;
+int procuraCache(adressTA endereco){ /// Procura a instruÃ§Ã£o na memÃ³ria cache;
     for(int i=0;i<MCACHE;i++)
         if(cacheMD[i].tag == endereco.tag){
             cacheMD[i].lfu++;
@@ -276,8 +276,8 @@ void gravaCache(adressMD endereco){ //Acesso Direto
 
     int endBinario = vetor_to_int(endereco.binario,0,mbits-1); /// pega os n bits mais significativos que representam o endereco do bloco da memoria;
     //cout<< "Endereco binario do bloco: "<< endBinario<<" ";
-    endBinario=bin_to_dec(endBinario); /// transforma esse endereço e transforma em decimal;
-    endBinario*= tamBloco; /// multiplica pelo tamanho do bloco para ver em qual parte do vetor da MP ele está localizado;
+    endBinario=bin_to_dec(endBinario); /// transforma esse endereÃ§o e transforma em decimal;
+    endBinario*= tamBloco; /// multiplica pelo tamanho do bloco para ver em qual parte do vetor da MP ele estÃ¡ localizado;
     //cout <<"Endereco decimal da MP:" << endBinario<<endl;
 
     for(int i=0;i<tamBloco;i++){
@@ -318,8 +318,8 @@ void gravaCache(adressTA endereco, int modo){ // Totalmente Associativa
     //int line;
 
     int endBinario = vetor_to_int(endereco.binario,0,mbits-1); /// pega os n bits mais significativos que representam o endereco do bloco da memoria;
-    endBinario=bin_to_dec(endBinario); /// transforma esse endereço e transforma em decimal;
-    endBinario*= tamBloco; /// multiplica pelo tamanho do bloco para ver em qual parte do vetor da MP ele está localizado;
+    endBinario=bin_to_dec(endBinario); /// transforma esse endereÃ§o e transforma em decimal;
+    endBinario*= tamBloco; /// multiplica pelo tamanho do bloco para ver em qual parte do vetor da MP ele estÃ¡ localizado;
 
     for(int i=0;i<tamBloco;i++){
         strcpy(aux.bloco[i],mp[endBinario+i].conteudo);
@@ -332,7 +332,7 @@ void gravaCache(adressTA endereco, int modo){ // Totalmente Associativa
         cacheCheia++;
     }else{
         switch(modo){
-            case 0:{ /// Acesso aleatório;
+            case 0:{ /// Acesso aleatÃ³rio;
                 line=rand()%MCACHE;
                 //cout <<"Cache cheia! Copiado para a linha "<<line<<" por acesso aleatorio"<<endl;
                 break;
@@ -371,8 +371,8 @@ void gravaCache(adressAC endereco, int modo){
 
     int endBinario = vetor_to_int(endereco.binario,0,mbits-1); /// pega os n bits mais significativos que representam o endereco do bloco da memoria;
     //cout<< "Endereco binario do bloco: "<< endBinario<<" ";
-    endBinario=bin_to_dec(endBinario); /// transforma esse endereço e transforma em decimal;
-    endBinario*= tamBloco; /// multiplica pelo tamanho do bloco para ver em qual parte do vetor da MP ele está localizado;
+    endBinario=bin_to_dec(endBinario); /// transforma esse endereÃ§o e transforma em decimal;
+    endBinario*= tamBloco; /// multiplica pelo tamanho do bloco para ver em qual parte do vetor da MP ele estÃ¡ localizado;
     //cout <<"| Endereco decimal da MP: " << endBinario<<endl;
 
     for(int i=0;i<tamBloco;i++){
@@ -387,7 +387,7 @@ void gravaCache(adressAC endereco, int modo){
         conjuntoCheio[endereco.conjunto]++;
     }else{
         switch(modo){
-            case 0:{ /// Acesso aleatório;
+            case 0:{ /// Acesso aleatÃ³rio;
                 line=rand()%qtdLinhas;
                 //cout <<"Cache cheia! Copiado para a linha "<<line<<" do conjunto "<<endereco.conjunto<< " por acesso aleatorio"<<endl;
                 break;
@@ -510,7 +510,7 @@ void ciclo(int binario, int tipo){
         }
     }
 }
-/// Funções estéticas //////////////////////////////////////////////////////
+/// FunÃ§Ãµes estÃ©ticas //////////////////////////////////////////////////////
 
 void printaMemoria(){
     int cor=0;
@@ -931,6 +931,4 @@ int main(){
     system("cls");
     printaMemoria();
     menu();
-    //int a[]={1,2,3,4,5,6};
-    //printaCache(1,a);
 }
